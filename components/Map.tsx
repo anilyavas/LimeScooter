@@ -9,26 +9,24 @@ import Mapbox, {
 import { featureCollection, point } from '@turf/helpers';
 
 import pin from '~/assets/pin.png';
+import scooters from '~/data/scooters.json';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || '');
+
+const points = scooters.map((scooter) => point([scooter.long, scooter.lat]));
 
 export default function Map() {
   return (
     <MapView style={{ flex: 1 }} styleURL="mapbox://styles/mapbox/dark-v11">
-      <Camera followZoomLevel={14} followUserLocation />
+      <Camera followZoomLevel={10} followUserLocation />
       <LocationPuck puckBearingEnabled puckBearing="heading" pulsing={{ isEnabled: true }} />
-      <ShapeSource
-        id="scooters"
-        shape={featureCollection([
-          point(
-            [30.47949770028006, 39.77401676943287],
-            point([30.4840821948872, 39.772508574662694])
-          ),
-        ])}>
+      <ShapeSource id="scooters" shape={featureCollection(points)}>
         <SymbolLayer
           id="scooter-icons"
           style={{
             iconImage: 'pin',
+            iconSize: 0.5,
+            iconAllowOverlap: true,
           }}
         />
         <Images images={{ pin }} />
