@@ -7,7 +7,7 @@ Mapbox.setAccessToken(accessToken);
 export default function Map() {
   return (
     <MapView style={{ flex: 1 }} styleURL="mapbox://styles/mapbox/dark-v11">
-      <Camera followUserLocation />
+      <Camera followZoomLevel={16} followUserLocation />
       <LocationPuck />
     </MapView>
   );
