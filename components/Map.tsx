@@ -37,6 +37,7 @@ export default function Map() {
         />
         <CircleLayer
           id="clusters"
+          belowLayerID="clusters-count"
           filter={['has', 'point_count']}
           style={{
             circleColor: '#42E100',
