@@ -2,6 +2,7 @@ import Mapbox, {
   Camera,
   CircleLayer,
   Images,
+  LineLayer,
   LocationPuck,
   MapView,
   ShapeSource,
@@ -10,13 +11,16 @@ import Mapbox, {
 import { featureCollection, point } from '@turf/helpers';
 
 import pin from '~/assets/pin.png';
+import routeResponse from '~/data/route.json';
 import scooters from '~/data/scooters.json';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || '');
 
-const points = scooters.map((scooter) => point([scooter.long, scooter.lat]));
-
 export default function Map() {
+  const points = scooters.map((scooter) => point([scooter.long, scooter.lat]));
+
+  const directionCoordinate = routeResponse.routes[0].geometry.coordinates;
+
   return (
     <MapView style={{ flex: 1 }} styleURL="mapbox://styles/mapbox/dark-v11">
       <Camera followZoomLevel={10} followUserLocation />
@@ -60,6 +64,29 @@ export default function Map() {
         />
         <Images images={{ pin }} />
       </ShapeSource>
+      {directionCoordinate && (
+        <ShapeSource
+          id="routeSource"
+          lineMetrics
+          shape={{
+            properties: {},
+            type: 'Feature',
+            geometry: {
+              type: 'LineString',
+              coordinates: directionCoordinate,
+            },
+          }}>
+          <LineLayer
+            id="exampleLineLayer"
+            style={{
+              lineColor: '#42A2D9',
+              lineCap: 'round',
+              lineJoin: 'round',
+              lineWidth: 7,
+            }}
+          />
+        </ShapeSource>
+      )}
     </MapView>
   );
 }
