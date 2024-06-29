@@ -23,7 +23,7 @@ export default function Map() {
 
   return (
     <MapView style={{ flex: 1 }} styleURL="mapbox://styles/mapbox/dark-v11">
-      <Camera followZoomLevel={10} followUserLocation />
+      <Camera followZoomLevel={14} followUserLocation />
       <LocationPuck puckBearingEnabled puckBearing="heading" pulsing={{ isEnabled: true }} />
       <ShapeSource
         id="scooters"
@@ -79,7 +79,7 @@ export default function Map() {
           <LineLayer
             id="exampleLineLayer"
             style={{
-              lineColor: '#42A2D9',
+              lineColor: '#42E100',
               lineCap: 'round',
               lineJoin: 'round',
               lineWidth: 7,
