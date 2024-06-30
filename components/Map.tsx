@@ -8,28 +8,35 @@ import Mapbox, {
   ShapeSource,
   SymbolLayer,
 } from '@rnmapbox/maps';
+import { OnPressEvent } from '@rnmapbox/maps/lib/typescript/src/types/OnPressEvent';
 import { featureCollection, point } from '@turf/helpers';
+import { useState } from 'react';
 
 import pin from '~/assets/pin.png';
-import routeResponse from '~/data/route.json';
 import scooters from '~/data/scooters.json';
+import { getDirections } from '~/services/directions';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || '');
 
 export default function Map() {
+  const [direction, setDirection] = useState();
   const points = scooters.map((scooter) => point([scooter.long, scooter.lat]));
 
-  const directionCoordinate = routeResponse.routes[0].geometry.coordinates;
+  const directionCoordinate = direction?.routes?.[0]?.geometry.coordinates;
+
+  const onPointPress = async (event: OnPressEvent) => {
+    const newDirection = await getDirections(
+      [30.479052, 39.773013],
+      [event.coordinates.longitude, event.coordinates.latitude]
+    );
+    setDirection(newDirection);
+  };
 
   return (
     <MapView style={{ flex: 1 }} styleURL="mapbox://styles/mapbox/dark-v11">
       <Camera followZoomLevel={14} followUserLocation />
       <LocationPuck puckBearingEnabled puckBearing="heading" pulsing={{ isEnabled: true }} />
-      <ShapeSource
-        id="scooters"
-        cluster
-        shape={featureCollection(points)}
-        onPress={(e) => console.log(JSON.stringify(e, null, 2))}>
+      <ShapeSource id="scooters" cluster shape={featureCollection(points)} onPress={onPointPress}>
         <SymbolLayer
           id="clusters-count"
           style={{
@@ -83,6 +90,7 @@ export default function Map() {
               lineCap: 'round',
               lineJoin: 'round',
               lineWidth: 7,
+              lineDasharray: [1, 0],
             }}
           />
         </ShapeSource>
