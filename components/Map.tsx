@@ -10,6 +10,7 @@ import Mapbox, {
 } from '@rnmapbox/maps';
 import { OnPressEvent } from '@rnmapbox/maps/lib/typescript/src/types/OnPressEvent';
 import { featureCollection, point } from '@turf/helpers';
+import * as Location from 'expo-location';
 import { useState } from 'react';
 
 import pin from '~/assets/pin.png';
@@ -25,8 +26,11 @@ export default function Map() {
   const directionCoordinate = direction?.routes?.[0]?.geometry.coordinates;
 
   const onPointPress = async (event: OnPressEvent) => {
+    const myLocation = await Location.getCurrentPositionAsync();
+    console.log(myLocation);
+
     const newDirection = await getDirections(
-      [30.479052, 39.773013],
+      [myLocation.coords.longitude, myLocation.coords.latitude],
       [event.coordinates.longitude, event.coordinates.latitude]
     );
     setDirection(newDirection);
