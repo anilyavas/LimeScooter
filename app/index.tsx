@@ -5,7 +5,7 @@ import Map from '~/components/Map';
 export default function Home() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Home' }} />
+      <Stack.Screen options={{ title: 'Home', headerShown: false }} />
       <Map />
     </>
   );

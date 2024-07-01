@@ -15,6 +15,7 @@ import { useState } from 'react';
 
 import pin from '~/assets/pin.png';
 import scooters from '~/data/scooters.json';
+import { useScooter } from '~/providers/ScooterProvider';
 import { getDirections } from '~/services/directions';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || '');
@@ -23,9 +24,12 @@ export default function Map() {
   const [direction, setDirection] = useState();
   const points = scooters.map((scooter) => point([scooter.long, scooter.lat]));
 
+  const { setSelectedScooter } = useScooter();
   const directionCoordinate = direction?.routes?.[0]?.geometry.coordinates;
 
   const onPointPress = async (event: OnPressEvent) => {
+    console.log(JSON.stringify(event, null, 2));
+    setSelectedScooter();
     const myLocation = await Location.getCurrentPositionAsync();
     console.log(myLocation);
 
