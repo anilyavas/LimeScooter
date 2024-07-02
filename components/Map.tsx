@@ -10,34 +10,24 @@ import Mapbox, {
 } from '@rnmapbox/maps';
 import { OnPressEvent } from '@rnmapbox/maps/lib/typescript/src/types/OnPressEvent';
 import { featureCollection, point } from '@turf/helpers';
-import * as Location from 'expo-location';
-import { useState } from 'react';
 
 import pin from '~/assets/pin.png';
 import scooters from '~/data/scooters.json';
 import { useScooter } from '~/providers/ScooterProvider';
-import { getDirections } from '~/services/directions';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || '');
 
 export default function Map() {
-  const [direction, setDirection] = useState();
-  const points = scooters.map((scooter) => point([scooter.long, scooter.lat]));
+  const points = scooters.map((scooter) => point([scooter.long, scooter.lat], { scooter }));
 
-  const { setSelectedScooter } = useScooter();
+  const { setSelectedScooter, direction } = useScooter();
   const directionCoordinate = direction?.routes?.[0]?.geometry.coordinates;
 
   const onPointPress = async (event: OnPressEvent) => {
-    console.log(JSON.stringify(event, null, 2));
-    setSelectedScooter();
-    const myLocation = await Location.getCurrentPositionAsync();
-    console.log(myLocation);
-
-    const newDirection = await getDirections(
-      [myLocation.coords.longitude, myLocation.coords.latitude],
-      [event.coordinates.longitude, event.coordinates.latitude]
-    );
-    setDirection(newDirection);
+    //console.log(JSON.stringify(event, null, 2));
+    if (event.features[0].properties?.scooter) {
+      setSelectedScooter(event.features[0].properties.scooter);
+    }
   };
 
   return (

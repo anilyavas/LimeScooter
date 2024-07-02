@@ -1,12 +1,32 @@
-import { PropsWithChildren, createContext, useContext, useState } from 'react';
+import * as Location from 'expo-location';
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 
+import { getDirections } from '~/services/directions';
 const ScooterContext = createContext({});
 
 export default function ScooterProvider({ children }: PropsWithChildren) {
   const [selectedScooter, setSelectedScooter] = useState();
+  const [direction, setDirection] = useState();
+
+  useEffect(() => {
+    const fetchDirections = async () => {
+      const myLocation = await Location.getCurrentPositionAsync();
+
+      const newDirection = await getDirections(
+        [myLocation.coords.longitude, myLocation.coords.latitude],
+        [selectedScooter.long, selectedScooter.lat]
+      );
+      setDirection(newDirection);
+    };
+
+    if (selectedScooter) {
+      fetchDirections();
+    }
+  }, [selectedScooter]);
+  console.log('Selected: ', selectedScooter);
 
   return (
-    <ScooterContext.Provider value={{ selectedScooter, setSelectedScooter }}>
+    <ScooterContext.Provider value={{ selectedScooter, setSelectedScooter, direction }}>
       {children}
     </ScooterContext.Provider>
   );
