@@ -4,6 +4,7 @@ import * as Location from 'expo-location';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 
 import { getDirections } from '~/services/directions';
+
 const ScooterContext = createContext({});
 
 export default function ScooterProvider({ children }: PropsWithChildren) {
@@ -12,20 +13,29 @@ export default function ScooterProvider({ children }: PropsWithChildren) {
   const [isNearby, setIsNearby] = useState(false);
 
   useEffect(() => {
-    Location.watchPositionAsync({ distanceInterval: 100 }, (newLocation) => {
-      if (selectedScooter) {
-        console.log('Location updated: ', newLocation);
+    let subscription: Location.LocationSubscription | undefined;
+
+    const watchLocation = async () => {
+      subscription = await Location.watchPositionAsync({ distanceInterval: 10 }, (newLocation) => {
         const from = point([newLocation.coords.longitude, newLocation.coords.latitude]);
         const to = point([selectedScooter.long, selectedScooter.lat]);
         const distance = getDistance(from, to, { units: 'meters' });
-        console.log(distance);
-        if (distance < 50) {
+        if (distance < 100) {
           setIsNearby(true);
         }
-      }
-    });
+      });
+    };
+
+    if (selectedScooter) {
+      watchLocation();
+    }
+
     // unsubscribe
-  }, []);
+    return () => {
+      subscription?.remove();
+    };
+  }, [selectedScooter]);
+
   useEffect(() => {
     const fetchDirections = async () => {
       const myLocation = await Location.getCurrentPositionAsync();
@@ -39,9 +49,9 @@ export default function ScooterProvider({ children }: PropsWithChildren) {
 
     if (selectedScooter) {
       fetchDirections();
+      setIsNearby(false);
     }
   }, [selectedScooter]);
-  console.log('Selected: ', selectedScooter);
 
   return (
     <ScooterContext.Provider
@@ -49,7 +59,7 @@ export default function ScooterProvider({ children }: PropsWithChildren) {
         selectedScooter,
         setSelectedScooter,
         direction,
-        directionCoordinates: direction?.routes?.[0]?.geometry.coordinates,
+        directionCoordinates: direction?.routes?.[0]?.geometry?.coordinates,
         duration: direction?.routes?.[0]?.duration,
         distance: direction?.routes?.[0]?.distance,
         isNearby,
