@@ -26,7 +26,15 @@ export default function ScooterProvider({ children }: PropsWithChildren) {
   console.log('Selected: ', selectedScooter);
 
   return (
-    <ScooterContext.Provider value={{ selectedScooter, setSelectedScooter, direction }}>
+    <ScooterContext.Provider
+      value={{
+        selectedScooter,
+        setSelectedScooter,
+        direction,
+        directionCoordinates: direction?.routes?.[0]?.geometry.coordinates,
+        routeTime: direction?.routes?.[0]?.duration,
+        routeDistance: direction?.routes?.[0]?.distance,
+      }}>
       {children}
     </ScooterContext.Provider>
   );
