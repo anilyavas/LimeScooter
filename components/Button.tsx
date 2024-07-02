@@ -6,9 +6,11 @@ type ButtonProps = {
 } & TouchableOpacityProps;
 
 export const Button = forwardRef<TouchableOpacity, ButtonProps>(
-  ({ title, ...touchableProps }, ref) => {
+  ({ title, onPress, ...otherProps }, ref) => {
     return (
-      <TouchableOpacity ref={ref} {...touchableProps} style={[styles.button, touchableProps.style]}>
+      <TouchableOpacity
+        ref={ref}
+        style={[styles.button, { backgroundColor: otherProps.disabled ? 'grey' : '#38C400' }]}>
         <Text style={styles.buttonText}>{title}</Text>
       </TouchableOpacity>
     );
