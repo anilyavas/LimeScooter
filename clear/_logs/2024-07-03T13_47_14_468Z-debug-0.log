@@ -1,0 +1,19 @@
+0 verbose cli /opt/homebrew/Cellar/node/22.3.0/bin/node /opt/homebrew/bin/npm
+1 info using npm@10.8.1
+2 info using node@v22.3.0
+3 silly config load:file:/opt/homebrew/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/anil/Documents/Expo/LimeScooter/.npmrc
+5 silly config load:file:/Users/anil/.npmrc
+6 silly config load:file:/Users/anil/.npm-global/etc/npmrc
+7 verbose title npm start
+8 verbose argv "start" "--cache" "clear"
+9 verbose logfile logs-max:10 dir:/Users/anil/Documents/Expo/LimeScooter/clear/_logs/2024-07-03T13_47_14_468Z-
+10 verbose logfile /Users/anil/Documents/Expo/LimeScooter/clear/_logs/2024-07-03T13_47_14_468Z-debug-0.log
+11 silly logfile done cleaning log files
+12 http fetch GET 200 https://registry.npmjs.org/npm 461ms
+13 verbose cwd /Users/anil/Documents/Expo/LimeScooter
+14 verbose os Darwin 23.5.0
+15 verbose node v22.3.0
+16 verbose npm  v10.8.1
+17 verbose exit 0
+18 info ok
