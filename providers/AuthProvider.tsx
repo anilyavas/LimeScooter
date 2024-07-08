@@ -4,7 +4,15 @@ import { ActivityIndicator } from 'react-native';
 
 import { supabase } from '~/lib/supabase';
 
-const AuthContext = createContext({});
+type AuthContextType = {
+  isAuthenticated: boolean;
+  session?: Session | null;
+  userId?: string;
+};
+
+const AuthContext = createContext<AuthContextType>({
+  isAuthenticated: false,
+});
 
 export default function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
@@ -25,10 +33,9 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     return <ActivityIndicator />;
   }
 
-  console.log(session?.user);
-
   return (
-    <AuthContext.Provider value={{ session, isAuthenticated: !!session?.user }}>
+    <AuthContext.Provider
+      value={{ session, isAuthenticated: !!session?.user, userId: session?.user.id }}>
       {children}
     </AuthContext.Provider>
   );

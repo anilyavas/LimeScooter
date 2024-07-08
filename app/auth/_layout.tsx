@@ -5,8 +5,9 @@ import { useAuth } from '~/providers/AuthProvider';
 export default function AuthLayout() {
   const { isAuthenticated } = useAuth();
 
-  if (!isAuthenticated) {
+  if (isAuthenticated) {
     return <Redirect href="/" />;
   }
+
   return <Slot />;
 }
