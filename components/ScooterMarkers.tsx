@@ -7,8 +7,8 @@ import scooters from '~/data/scooters.json';
 import { useScooter } from '~/providers/ScooterProvider';
 
 export default function ScooterMarkers() {
-  const { setSelectedScooter, direction, directionCoordinates, routeTime } = useScooter();
-  const points = scooters.map((scooter) => point([scooter.long, scooter.lat], { scooter }));
+  const { setSelectedScooter, nearbyScooters } = useScooter();
+  const points = nearbyScooters.map((scooter) => point([scooter.long, scooter.lat], { scooter }));
 
   const onPointPress = async (event: OnPressEvent) => {
     if (event.features[0].properties?.scooter) {

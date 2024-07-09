@@ -26,7 +26,7 @@ export default function ScooterProvider({ children }: PropsWithChildren) {
       if (error) {
         Alert.alert('Failed to fetch scooters!');
       } else {
-        console.log(JSON.stringify(data, null, 2));
+        setNearbyScooters(data);
       }
     };
     fetchScooters();
@@ -76,6 +76,7 @@ export default function ScooterProvider({ children }: PropsWithChildren) {
   return (
     <ScooterContext.Provider
       value={{
+        nearbyScooters,
         selectedScooter,
         setSelectedScooter,
         direction,
