@@ -1,16 +1,32 @@
 import { FontAwesome6 } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useEffect, useRef } from 'react';
-import { Text, Image, View } from 'react-native';
+import { Text, Image, View, Alert } from 'react-native';
 
 import { Button } from './Button';
 import scooterImage from '../assets/scooter.png';
 
+import { supabase } from '~/lib/supabase';
+import { useAuth } from '~/providers/AuthProvider';
 import { useScooter } from '~/providers/ScooterProvider';
 export default function SelectedScooterSheet() {
   const { selectedScooter, duration, distance, isNearby } = useScooter();
+  const { userId } = useAuth();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const startJourney = async () => {
+    const { data, error } = await supabase
+      .from('rides')
+      .insert([{ user_id: userId, scooter_id: selectedScooter.id }])
+      .select();
+    if (error) {
+      Alert.alert('Failed to start the ride!');
+    } else {
+      console.warn('Ride started');
+      console.log(data);
+    }
+  };
 
   useEffect(() => {
     if (selectedScooter) {
@@ -64,7 +80,7 @@ export default function SelectedScooterSheet() {
           </View>
           {/* Bottom part */}
           <View>
-            <Button disabled={!isNearby} title="Start journey" onPress={() => {}} />
+            <Button disabled={!isNearby} title="Start journey" onPress={startJourney} />
           </View>
         </BottomSheetView>
       )}
