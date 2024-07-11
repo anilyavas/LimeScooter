@@ -20,7 +20,6 @@ export default function RideProvider({ children }: PropsWithChildren) {
         .eq('user_id', userId)
         .is('finished_at', null)
         .single();
-      console.log(data);
       if (data) {
         setRide(data);
       }
@@ -41,9 +40,7 @@ export default function RideProvider({ children }: PropsWithChildren) {
       Alert.alert('Failed to start the ride!');
       console.log(error);
     } else {
-      console.warn('Ride started');
-      console.log(data);
-      setRide(data);
+      setRide(data[0]);
     }
   };
 
@@ -51,7 +48,7 @@ export default function RideProvider({ children }: PropsWithChildren) {
     if (!ride) {
       return;
     }
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('rides')
       .update({ finished_at: new Date() })
       .eq('id', ride.id);
@@ -59,12 +56,14 @@ export default function RideProvider({ children }: PropsWithChildren) {
     if (error) {
       Alert.alert('Failed to finish the ride');
     } else {
-      setRide(null);
+      setRide(undefined);
     }
   };
 
   console.log('Current ride: ', ride);
-  return <RideContext.Provider value={{ startRide, ride }}>{children}</RideContext.Provider>;
+  return (
+    <RideContext.Provider value={{ startRide, ride, finishRide }}>{children}</RideContext.Provider>
+  );
 }
 
 export const useRide = () => useContext(RideContext);

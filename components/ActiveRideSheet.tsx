@@ -13,6 +13,8 @@ export default function ActiveRideSheet() {
   useEffect(() => {
     if (ride) {
       bottomSheetRef.current?.expand();
+    } else {
+      bottomSheetRef.current?.close();
     }
   }, [ride]);
 

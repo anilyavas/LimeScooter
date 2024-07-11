@@ -2,15 +2,18 @@ import { forwardRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 
 type ButtonProps = {
+  onPress?: TouchableOpacityProps['onPress'];
   title?: string;
 } & TouchableOpacityProps;
 
 export const Button = forwardRef<TouchableOpacity, ButtonProps>(
-  ({ title, onPress, ...otherProps }, ref) => {
+  ({ onPress, title, ...otherProps }, ref) => {
     return (
       <TouchableOpacity
         ref={ref}
-        style={[styles.button, { backgroundColor: otherProps.disabled ? 'grey' : '#38C400' }]}>
+        style={[styles.button, { backgroundColor: otherProps.disabled ? 'gray' : '#38C400' }]}
+        onPress={onPress}
+        {...otherProps}>
         <Text style={styles.buttonText}>{title}</Text>
       </TouchableOpacity>
     );
@@ -37,7 +40,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '700',
     textAlign: 'center',
   },
 });
