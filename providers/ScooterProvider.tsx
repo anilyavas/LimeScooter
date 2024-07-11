@@ -10,25 +10,26 @@ import { getDirections } from '~/services/directions';
 const ScooterContext = createContext({});
 
 export default function ScooterProvider({ children }: PropsWithChildren) {
+  const [nearbyScooters, setNearbyScooters] = useState([]);
   const [selectedScooter, setSelectedScooter] = useState();
   const [direction, setDirection] = useState();
   const [isNearby, setIsNearby] = useState(false);
-  const [nearbyScooters, setNearbyScooters] = useState([]);
 
   useEffect(() => {
     const fetchScooters = async () => {
       const location = await Location.getCurrentPositionAsync();
-      const { data, error } = await supabase.rpc('nearby_scooters', {
+      const { error, data } = await supabase.rpc('nearby_scooters', {
         lat: location.coords.latitude,
         long: location.coords.longitude,
         max_dist_meters: 2000,
       });
       if (error) {
-        Alert.alert('Failed to fetch scooters!');
+        Alert.alert('Failed to fetch scooters');
       } else {
         setNearbyScooters(data);
       }
     };
+
     fetchScooters();
   }, []);
 
@@ -69,6 +70,9 @@ export default function ScooterProvider({ children }: PropsWithChildren) {
 
     if (selectedScooter) {
       fetchDirections();
+      setIsNearby(false);
+    } else {
+      setDirection(undefined);
       setIsNearby(false);
     }
   }, [selectedScooter]);

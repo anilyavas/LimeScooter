@@ -1,8 +1,8 @@
 import { Stack } from 'expo-router';
 
+import ActiveRideSheet from '~/components/ActiveRideSheet';
 import Map from '~/components/Map';
 import SelectedScooterSheet from '~/components/SelectedScooterSheet';
-import { supabase } from '~/lib/supabase';
 
 export default function Home() {
   return (
@@ -10,6 +10,7 @@ export default function Home() {
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
       <Map />
       <SelectedScooterSheet />
+      <ActiveRideSheet />
     </>
   );
 }
