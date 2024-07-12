@@ -1,5 +1,3 @@
-import getDistance from '@turf/distance';
-import { point } from '@turf/helpers';
 import * as Location from 'expo-location';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import { Alert } from 'react-native';

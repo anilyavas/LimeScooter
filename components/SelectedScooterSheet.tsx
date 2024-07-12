@@ -1,11 +1,14 @@
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useEffect, useRef } from 'react';
-import { Text, Image, View } from 'react-native';
+import { Text, Image, View, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from './Button';
 
 import scooterImage from '~/assets/scooter.png';
+import { supabase } from '~/lib/supabase';
+import { useAuth } from '~/providers/AuthProvider';
 import { useRide } from '~/providers/RideProvider';
 import { useScooter } from '~/providers/ScooterProvider';
 
@@ -40,7 +43,7 @@ export default function SelectedScooterSheet() {
             <View style={{ flex: 1, gap: 5 }}>
               <Text style={{ color: 'white', fontSize: 20, fontWeight: '600' }}>Lime - S</Text>
               <Text style={{ color: 'gray', fontSize: 18 }}>
-                id-{selectedScooter.id} · Yıldırımlar Sokak
+                id-{selectedScooter.id} · Madison Avenue
               </Text>
             </View>
             <View style={{ gap: 5 }}>

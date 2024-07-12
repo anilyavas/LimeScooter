@@ -4,7 +4,6 @@ import { useAuth } from '~/providers/AuthProvider';
 
 export default function HomeLayout() {
   const { isAuthenticated } = useAuth();
-  console.log('isAuthenticated: ', isAuthenticated);
 
   if (!isAuthenticated) {
     return <Redirect href="/auth" />;
