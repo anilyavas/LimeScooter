@@ -34,30 +34,6 @@ export default function ScooterProvider({ children }: PropsWithChildren) {
   }, []);
 
   useEffect(() => {
-    let subscription: Location.LocationSubscription | undefined;
-
-    const watchLocation = async () => {
-      subscription = await Location.watchPositionAsync({ distanceInterval: 10 }, (newLocation) => {
-        const from = point([newLocation.coords.longitude, newLocation.coords.latitude]);
-        const to = point([selectedScooter.long, selectedScooter.lat]);
-        const distance = getDistance(from, to, { units: 'meters' });
-        if (distance < 100) {
-          setIsNearby(true);
-        }
-      });
-    };
-
-    if (selectedScooter) {
-      watchLocation();
-    }
-
-    // unsubscribe
-    return () => {
-      subscription?.remove();
-    };
-  }, [selectedScooter]);
-
-  useEffect(() => {
     const fetchDirections = async () => {
       const myLocation = await Location.getCurrentPositionAsync();
 

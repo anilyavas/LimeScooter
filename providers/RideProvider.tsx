@@ -1,3 +1,4 @@
+import * as Location from 'expo-location';
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 
@@ -11,6 +12,8 @@ export default function RideProvider({ children }: PropsWithChildren) {
   const { userId } = useAuth();
 
   const [ride, setRide] = useState();
+
+  const [rideRoute, setRideRoute] = useState([]);
 
   useEffect(() => {
     const fetchActiveRide = async () => {
@@ -28,6 +31,35 @@ export default function RideProvider({ children }: PropsWithChildren) {
     };
     fetchActiveRide();
   }, []);
+
+  useEffect(() => {
+    let subscription: Location.LocationSubscription | undefined;
+
+    const watchLocation = async () => {
+      subscription = await Location.watchPositionAsync({ distanceInterval: 50 }, (newLocation) => {
+        console.log('New Location: ', newLocation.coords.longitude, newLocation.coords.latitude);
+        setRideRoute((currentRoute) => [
+          ...currentRoute,
+          [newLocation.coords.longitude, newLocation.coords.latitude],
+        ]);
+        //  const from = point([newLocation.coords.longitude, newLocation.coords.latitude]);
+        //  const to = point([selectedScooter.long, selectedScooter.lat]);
+        //  const distance = getDistance(from, to, { units: 'meters' });
+        //  if (distance < 100) {
+        //    setIsNearby(true);
+        //  }
+      });
+    };
+
+    if (ride) {
+      watchLocation();
+    }
+
+    // unsubscribe
+    return () => {
+      subscription?.remove();
+    };
+  }, [ride]);
 
   const startRide = async (scooterId: number) => {
     if (ride) {
@@ -64,7 +96,9 @@ export default function RideProvider({ children }: PropsWithChildren) {
 
   console.log('Current ride: ', ride);
   return (
-    <RideContext.Provider value={{ startRide, ride, finishRide }}>{children}</RideContext.Provider>
+    <RideContext.Provider value={{ startRide, ride, finishRide, rideRoute }}>
+      {children}
+    </RideContext.Provider>
   );
 }
 
